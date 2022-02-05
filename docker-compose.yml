@@ -1,0 +1,11 @@
+version: "3.7"
+
+services:
+  app:
+    image: hostmonitor/app
+    container_name: app
+    build: .
+    restart: always
+    env_file: .env
+    environment:
+      - SUPER_SECRET=123456

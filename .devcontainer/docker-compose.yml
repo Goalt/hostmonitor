@@ -1,0 +1,16 @@
+version: '3.7'
+services:
+  app:
+    image: go-template/app:debug
+    container_name: app_debug
+    build:
+      context: .
+      dockerfile: .devcontainer/Dockerfile
+    volumes:
+      - .:/workspace:cached
+    cap_add:
+      - SYS_PTRACE
+    security_opt:
+      - seccomp:unconfined
+    command: /bin/sh -c "while sleep 1000; do :; done"
+ 
