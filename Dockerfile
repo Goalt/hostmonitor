@@ -13,7 +13,11 @@ COPY go.sum .
 
 RUN go mod download
 
+RUN go get github.com/google/wire/cmd/wire
+
 COPY . .
+
+RUN make generate
 
 # Build the Go apps
 RUN go build -o app ./cmd/main.go

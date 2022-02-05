@@ -12,8 +12,8 @@ import (
 
 func main() {
 	app := &cli.App{
-		Name:     "go-template",
-		Usage:    "./go-template",
+		Name:     "hostmonitor",
+		Usage:    "./hostmonitor",
 		Commands: subcomands.Get(),
 		Flags: []cli.Flag{
 			&cli.IntFlag{

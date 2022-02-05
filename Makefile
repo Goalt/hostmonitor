@@ -6,4 +6,6 @@ lint:
 	golangci-lint run
 test:
 	go test ./...
+generate:
+	cd internal/provider/ && wire ; cd ../..
 all: clean run
