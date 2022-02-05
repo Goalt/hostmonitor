@@ -1,9 +1,8 @@
-module github.com/Goalt/go-template
+module github.com/Goalt/hostmonitor
 
 go 1.17
 
 require (
-	github.com/golang/mock v1.6.0
 	github.com/stretchr/testify v1.7.0
 	github.com/urfave/cli/v2 v2.3.0
 )

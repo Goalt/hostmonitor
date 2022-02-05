@@ -2,12 +2,11 @@ package main
 
 import (
 	"fmt"
-	"log"
 	"os"
 	"time"
 
-	"github.com/Goalt/go-template/cmd/subcomands"
-	"github.com/Goalt/go-template/cmd/variables"
+	"github.com/Goalt/hostmonitor/cmd/subcomands"
+	"github.com/Goalt/hostmonitor/cmd/variables"
 	"github.com/urfave/cli/v2"
 )
 
@@ -21,11 +20,6 @@ func main() {
 				Name:    variables.DebugLevel,
 				Value:   1,
 				EnvVars: []string{variables.DebugLevel},
-			},
-			&cli.IntFlag{
-				Name:    variables.MaxFileSize,
-				Value:   1,
-				EnvVars: []string{variables.MaxFileSize},
 			},
 		},
 		Action: func(ctx *cli.Context) error {
@@ -43,12 +37,4 @@ func main() {
 	if err != nil {
 		fmt.Println(err)
 	}
-}
-
-type simpleInterface interface {
-	SimpleInterfaceFunc(int) string
-}
-
-func simpleFunc(i simpleInterface) {
-	log.Println(i.SimpleInterfaceFunc(42))
 }

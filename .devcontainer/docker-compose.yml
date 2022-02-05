@@ -1,7 +1,7 @@
 version: '3.7'
 services:
   app:
-    image: go-template/app:debug
+    image: go-hostmonitor/app:debug
     container_name: app_debug
     build:
       context: .
