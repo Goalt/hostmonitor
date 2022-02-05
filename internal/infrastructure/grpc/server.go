@@ -1,13 +1,10 @@
-package http
+package grpc
 
 type Server struct {
 
 }
 
 func (s Server) Run() error {
-	for true {
-		
-	}
 	return nil
 }
 

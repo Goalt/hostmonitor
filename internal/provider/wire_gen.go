@@ -9,7 +9,7 @@ package provider
 import (
 	"context"
 	"github.com/Goalt/hostmonitor/internal/config"
-	"github.com/Goalt/hostmonitor/internal/infrastructure/http"
+	"github.com/Goalt/hostmonitor/internal/infrastructure/grpc"
 	"github.com/Goalt/hostmonitor/internal/usecase/repository"
 )
 
@@ -30,7 +30,7 @@ type Application struct {
 	ctx context.Context
 	log usecase_repository.Logger
 
-	server http.Server
+	server grpc.Server
 	config config.Config
 }
 
@@ -53,7 +53,7 @@ func (a *Application) Run() error {
 	return nil
 }
 
-func provideApp(server http.Server, cfg config.Config, ctx context.Context, log usecase_repository.Logger) Application {
+func provideApp(server grpc.Server, cfg config.Config, ctx context.Context, log usecase_repository.Logger) Application {
 	return Application{
 		server: server,
 		ctx:    ctx,
