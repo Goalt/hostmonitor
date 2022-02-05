@@ -14,3 +14,7 @@ func (s Server) Run() error {
 func (s Server) Stop() error {
 	return nil
 }
+
+func NewHTTPServer() Server {
+	return Server{}
+}
