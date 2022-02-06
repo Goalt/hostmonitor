@@ -42,16 +42,16 @@ type Application struct {
 
 func (a *Application) Run() error {
 
+	a.log.Info("starting grpc server")
 	go func() {
-		err := a.server.Run()
-		if err != nil {
+		if err := a.server.Run(); err != nil {
 			a.log.Error(err)
 		}
 	}()
 
+	a.log.Info("starting proxy server")
 	go func() {
-		err := a.proxy.Run(a.config.GRPCServer.Port)
-		if err != nil {
+		if err := a.proxy.Run(a.config.GRPCServer.Port); err != nil {
 			a.log.Error(err)
 		}
 	}()
@@ -59,8 +59,14 @@ func (a *Application) Run() error {
 	<-a.ctx.Done()
 
 	a.server.Stop()
+	a.log.Info("stopped grpc server")
 
-	return a.proxy.Stop()
+	if err := a.proxy.Stop(); err != nil {
+		return nil
+	}
+	a.log.Info("stopped proxy server")
+
+	return nil
 }
 
 func provideApp(server2 *server.GRPCServer, proxy2 *proxy.Proxy, cfg config.Config, ctx context.Context, log usecase_repository.Logger) Application {

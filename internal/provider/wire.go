@@ -47,8 +47,12 @@ func (a *Application) Run() error {
 	a.log.Info("stopped grpc server")
 
 	// Proxy stop
-	return a.proxy.Stop()
+	if err := a.proxy.Stop(); err != nil {
+		return nil
+	}
 	a.log.Info("stopped proxy server")
+
+	return nil
 }
 
 func provideApp(server *server.GRPCServer, proxy *proxy.Proxy, cfg config.Config, ctx context.Context, log usecase_repository.Logger) Application {
