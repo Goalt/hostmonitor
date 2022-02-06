@@ -8,18 +8,16 @@ type StatisticsI interface {
 }
 
 type statisticsInteractor struct {
-
 }
 
 func (si *statisticsInteractor) GetLast() entity.Statistics {
-	return entity.Statistics{FreeRam: 10}
-} 
+	return entity.Statistics{FreeRam: 11}
+}
 
 func (si *statisticsInteractor) Update(entity.Statistics) {
-	
-} 
+
+}
 
 func NewStatistics() StatisticsI {
 	return &statisticsInteractor{}
 }
-

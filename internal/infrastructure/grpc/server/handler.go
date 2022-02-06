@@ -19,8 +19,11 @@ func NewHandler(statisticsI interactor.StatisticsI) *Handler {
 }
 
 func (h *Handler) GetStatistics(context.Context, *emptypb.Empty) (*apipb.StatisticsResponse, error) {
-	return &apipb.StatisticsResponse{
-		FreeRam: 10,
-	}, nil
-}
+	statistics := h.statisticsI.GetLast()
+	
+	resp := apipb.StatisticsResponse{
+		FreeRam: uint64(statistics.FreeRam),
+	}
 
+	return &resp, nil
+}
