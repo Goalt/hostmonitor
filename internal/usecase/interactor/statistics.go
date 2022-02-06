@@ -1,6 +1,10 @@
 package interactor
 
-import "github.com/Goalt/hostmonitor/internal/entity"
+import (
+	"sync"
+
+	"github.com/Goalt/hostmonitor/internal/entity"
+)
 
 type StatisticsI interface {
 	GetLast() entity.Statistics
@@ -8,14 +12,22 @@ type StatisticsI interface {
 }
 
 type statisticsInteractor struct {
+	data entity.Statistics
+	mu   sync.Mutex
 }
 
 func (si *statisticsInteractor) GetLast() entity.Statistics {
-	return entity.Statistics{FreeRam: 11}
+	si.mu.Lock()
+	defer si.mu.Unlock()
+
+	return si.data
 }
 
-func (si *statisticsInteractor) Update(entity.Statistics) {
+func (si *statisticsInteractor) Update(new entity.Statistics) {
+	si.mu.Lock()
+	defer si.mu.Unlock()
 
+	si.data = new
 }
 
 func NewStatistics() StatisticsI {
