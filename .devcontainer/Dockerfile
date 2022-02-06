@@ -1,7 +1,13 @@
 FROM mcr.microsoft.com/vscode/devcontainers/go:1.17
 
 RUN apt update
-RUN apt install -y protobuf-compiler
+RUN apt install -y protobuf-compiler libprotobuf-dev
+
+RUN PREFIX="/usr/local" && \
+    VERSION="1.0.0-rc12" && \
+    curl -sSL \
+        "https://github.com/bufbuild/buf/releases/download/v${VERSION}/buf-$(uname -s)-$(uname -m).tar.gz" | \
+        tar -xvzf - -C "${PREFIX}" --strip-components 1
 
 USER vscode
 
@@ -14,11 +20,10 @@ RUN go get github.com/golang/mock/mockgen
 
 COPY . .
 
-# RUN go mod tidy
-
-# RUN go install \
-#     github.com/grpc-ecosystem/grpc-gateway/protoc-gen-grpc-gateway \
-#     github.com/grpc-ecosystem/grpc-gateway/protoc-gen-swagger \
-#     github.com/golang/protobuf/protoc-gen-go
+RUN go install \
+    github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-grpc-gateway \
+    github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2 \
+    google.golang.org/protobuf/cmd/protoc-gen-go \
+    google.golang.org/grpc/cmd/protoc-gen-go-grpc
 
 EXPOSE 8080

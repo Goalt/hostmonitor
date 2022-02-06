@@ -2,9 +2,9 @@ syntax = "proto3";
 
 package api_pb;
 
+option go_package = "./";
+
 import "google/api/annotations.proto";
-import "google/protobuf/struct.proto";
-import "google/api/httpbody.proto";
 import "google/protobuf/empty.proto";
 
 message StatisticsResponse {
