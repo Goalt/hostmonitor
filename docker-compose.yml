@@ -7,3 +7,14 @@ services:
     build: .
     restart: always
     env_file: .env
+    ports:
+      - 8080:8080
+  swagger-ui:
+    image: swaggerapi/swagger-ui
+    container_name: swagger-ui
+    volumes:
+      - ./internal/infrastructure/grpc:/foo
+    environment:
+      - SWAGGER_JSON=/foo/api.swagger.json
+    ports:
+      - 8090:8080

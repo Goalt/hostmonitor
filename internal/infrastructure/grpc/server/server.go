@@ -42,5 +42,5 @@ func (s GRPCServer) Stop() {
 type tmp struct {}
 
 func (t tmp) GetStatistics(context.Context, *emptypb.Empty) (*apipb.StatisticsResponse, error) {
-	return nil, nil
+	return &apipb.StatisticsResponse{FreeRam: 10}, nil
 }
