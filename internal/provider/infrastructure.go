@@ -21,7 +21,7 @@ func provideProxy(cnf config.ProxyServer) *proxy.Proxy {
 	return proxy.NewProxy(cnf)
 }
 
-var infrastructureSet = wire.NewSet(
+var InfrastructureSet = wire.NewSet(
 	ProvideLogger,
 	provideServer,
 	provideProxy,

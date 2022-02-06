@@ -17,7 +17,7 @@ func provideCnfProxyServer(cnf config.Config) config.ProxyServer {
 	return cnf.ProxyServer
 }
 
-var typesSet = wire.NewSet(
+var TypesSet = wire.NewSet(
 	provideCnfLogger,
 	provideCnfGRPCServer,
 	provideCnfProxyServer,

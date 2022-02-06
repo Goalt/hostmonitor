@@ -23,8 +23,8 @@ make all
 make generate
 ```
 
-1. Код для Grpc сервера
-2. Код для http proxy сервера
+1. Код для Grpc сервера +
+2. Код для http proxy сервера +
 3. interactor
 4. ssh клиент
 5. ci/cd lint, test
