@@ -8,6 +8,8 @@ test:
 	go test ./...
 generate:
 	cd internal/provider/ && wire ; cd ../..
+
 	cd internal/infrastructure/grpc && buf mod update && buf generate ; cd ../../..
 
+	mockgen -source=internal/usecase/interactor/statistics.go -destination=internal/mocks/interactor/statistics.go
 all: clean run
