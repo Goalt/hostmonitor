@@ -9,17 +9,21 @@ package provider
 import (
 	"context"
 	"github.com/Goalt/hostmonitor/internal/config"
-	"github.com/Goalt/hostmonitor/internal/infrastructure/grpc"
+	"github.com/Goalt/hostmonitor/internal/infrastructure/grpc/proxy"
+	"github.com/Goalt/hostmonitor/internal/infrastructure/grpc/server"
 	"github.com/Goalt/hostmonitor/internal/usecase/repository"
 )
 
 // Injectors from wire.go:
 
 func InitializeApp(cfg config.Config, context2 context.Context) (Application, func(), error) {
-	server := provideServer()
+	grpcServer := provideCnfGRPCServer(cfg)
+	serverGRPCServer := provideServer(grpcServer)
+	proxyServer := provideCnfProxyServer(cfg)
+	proxy := provideProxy(proxyServer)
 	logger := provideCnfLogger(cfg)
 	usecase_repositoryLogger := ProvideLogger(logger)
-	application := provideApp(server, cfg, context2, usecase_repositoryLogger)
+	application := provideApp(serverGRPCServer, proxy, cfg, context2, usecase_repositoryLogger)
 	return application, func() {
 	}, nil
 }
@@ -30,7 +34,9 @@ type Application struct {
 	ctx context.Context
 	log usecase_repository.Logger
 
-	server grpc.Server
+	server *server.GRPCServer
+	proxy  *proxy.Proxy
+
 	config config.Config
 }
 
@@ -43,19 +49,24 @@ func (a *Application) Run() error {
 		}
 	}()
 
+	go func() {
+		err := a.proxy.Run(a.config.GRPCServer.Port)
+		if err != nil {
+			a.log.Error(err)
+		}
+	}()
+
 	<-a.ctx.Done()
 
-	err := a.server.Stop()
-	if err != nil {
-		a.log.Error(err)
-	}
+	a.server.Stop()
 
-	return nil
+	return a.proxy.Stop()
 }
 
-func provideApp(server grpc.Server, cfg config.Config, ctx context.Context, log usecase_repository.Logger) Application {
+func provideApp(server2 *server.GRPCServer, proxy2 *proxy.Proxy, cfg config.Config, ctx context.Context, log usecase_repository.Logger) Application {
 	return Application{
-		server: server,
+		server: server2,
+		proxy:  proxy2,
 		ctx:    ctx,
 		config: cfg,
 		log:    log,

@@ -30,6 +30,12 @@ func main() {
 					SetReportCaller: true,
 					Level:           ctx.Int(variables.DebugLevel),
 				},
+				GRPCServer: config.GRPCServer{
+					Port: 20000,
+				},
+				ProxyServer: config.ProxyServer{
+					Port: 8080,
+				},
 			}
 			fmt.Printf("%+v\n", cfg)
 
