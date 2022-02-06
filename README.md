@@ -18,7 +18,7 @@ Clean, build, run.
 make all
 ```
 
-## Mocs generation
+## Generate (generate swagger.json, stubs)
 ```bash
-mockgen -source=main.go -destination=mocks/mocks_main.go
+make generate
 ```
