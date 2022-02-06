@@ -18,7 +18,9 @@ import (
 
 func InitializeApp(cfg config.Config, context2 context.Context) (Application, func(), error) {
 	grpcServer := provideCnfGRPCServer(cfg)
-	serverGRPCServer := provideServer(grpcServer)
+	statisticsI := provideStatisticsI()
+	handler := provideHandler(statisticsI)
+	serverGRPCServer := provideServer(grpcServer, handler)
 	proxyServer := provideCnfProxyServer(cfg)
 	proxy := provideProxy(proxyServer)
 	logger := provideCnfLogger(cfg)

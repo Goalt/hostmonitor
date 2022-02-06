@@ -66,5 +66,5 @@ func provideApp(server *server.GRPCServer, proxy *proxy.Proxy, cfg config.Config
 }
 
 func InitializeApp(cfg config.Config, context context.Context) (Application, func(), error) {
-	panic(wire.Build(provideApp, infrastructureSet, typesSet))
+	panic(wire.Build(provideApp, InfrastructureSet, TypesSet, InteractorSet))
 }

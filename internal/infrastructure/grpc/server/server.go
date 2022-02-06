@@ -1,24 +1,24 @@
 package server
 
 import (
-	"context"
 	"fmt"
 	"net"
 
 	"github.com/Goalt/hostmonitor/internal/config"
 	apipb "github.com/Goalt/hostmonitor/internal/infrastructure/grpc/proto"
 	"google.golang.org/grpc"
-	"google.golang.org/protobuf/types/known/emptypb"
 )
 
 type GRPCServer struct {
 	cnf config.GRPCServer
 	grpcServer *grpc.Server
+	handler *Handler 
 }
 
-func NewGRPCServer(cnf config.GRPCServer) *GRPCServer {
+func NewGRPCServer(cnf config.GRPCServer, hd *Handler) *GRPCServer {
 	return &GRPCServer{
 		cnf: cnf,
+		handler: hd,
 	}
 }
 
@@ -30,17 +30,11 @@ func (s GRPCServer) Run() error {
 
 	s.grpcServer = grpc.NewServer()
 
-	apipb.RegisterHostMonitorServiceServer(s.grpcServer, tmp{})
+	apipb.RegisterHostMonitorServiceServer(s.grpcServer, s.handler)
 
 	return s.grpcServer.Serve(lis)
 }
 
 func (s GRPCServer) Stop() {
 	s.grpcServer.Stop()
-}
-
-type tmp struct {}
-
-func (t tmp) GetStatistics(context.Context, *emptypb.Empty) (*apipb.StatisticsResponse, error) {
-	return &apipb.StatisticsResponse{FreeRam: 10}, nil
 }
