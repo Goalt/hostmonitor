@@ -8,7 +8,33 @@ import "google/api/annotations.proto";
 import "google/protobuf/empty.proto";
 
 message StatisticsResponse {
-    uint64 freeRam = 1;
+    Ram ram = 1;
+    Storage storage = 2;
+    LoadAvg loadavg = 3;
+    Uptime uptime = 4;
+
+    uint64 updatedAt = 5;
+}
+
+message Ram {
+    uint64 Total = 1;
+    uint64 Available = 2;
+}
+
+message Storage {
+    uint64 Total = 1;
+    uint64 Available = 2;
+    uint64 Free = 3;
+}
+
+message LoadAvg {
+    float Load1 = 1;
+    float Load5 = 2;
+    float Load15 = 3;
+}
+
+message Uptime {
+    float dur = 1;
 }
 
 service HostMonitorService {

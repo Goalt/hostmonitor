@@ -40,12 +40,80 @@
     }
   },
   "definitions": {
+    "api_pbLoadAvg": {
+      "type": "object",
+      "properties": {
+        "Load1": {
+          "type": "number",
+          "format": "float"
+        },
+        "Load5": {
+          "type": "number",
+          "format": "float"
+        },
+        "Load15": {
+          "type": "number",
+          "format": "float"
+        }
+      }
+    },
+    "api_pbRam": {
+      "type": "object",
+      "properties": {
+        "Total": {
+          "type": "string",
+          "format": "uint64"
+        },
+        "Available": {
+          "type": "string",
+          "format": "uint64"
+        }
+      }
+    },
     "api_pbStatisticsResponse": {
       "type": "object",
       "properties": {
-        "freeRam": {
+        "ram": {
+          "$ref": "#/definitions/api_pbRam"
+        },
+        "storage": {
+          "$ref": "#/definitions/api_pbStorage"
+        },
+        "loadavg": {
+          "$ref": "#/definitions/api_pbLoadAvg"
+        },
+        "uptime": {
+          "$ref": "#/definitions/api_pbUptime"
+        },
+        "updatedAt": {
           "type": "string",
           "format": "uint64"
+        }
+      }
+    },
+    "api_pbStorage": {
+      "type": "object",
+      "properties": {
+        "Total": {
+          "type": "string",
+          "format": "uint64"
+        },
+        "Available": {
+          "type": "string",
+          "format": "uint64"
+        },
+        "Free": {
+          "type": "string",
+          "format": "uint64"
+        }
+      }
+    },
+    "api_pbUptime": {
+      "type": "object",
+      "properties": {
+        "dur": {
+          "type": "number",
+          "format": "float"
         }
       }
     },

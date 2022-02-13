@@ -18,11 +18,11 @@ func TestHandler_GetStatistics(t *testing.T) {
 		ctrl := gomock.NewController(t)
 
 		statisticsInteractorI := mock_interactor.NewMockStatisticsI(ctrl)
-		statisticsInteractorI.EXPECT().GetLast().Return(entity.Statistics{FreeRam: 5})
+		statisticsInteractorI.EXPECT().GetLast().Return(entity.Statistics{})
 
 		h := NewHandler(statisticsInteractorI)
 
-		expected := apipb.StatisticsResponse{FreeRam: 5}
+		expected := apipb.StatisticsResponse{}
 
 		got, err := h.GetStatistics(context.Background(), &emptypb.Empty{})
 

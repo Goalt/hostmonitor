@@ -1,3 +1,5 @@
+.PHONY: lint test
+
 run:
 	docker-compose -p hostmonitor -f docker-compose.yml up
 clean:

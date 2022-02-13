@@ -21,7 +21,7 @@ type host struct {
 
 func NewHost(cnf config.Host, sshFactory usecase_repository.SSHClientFactory) HostI {
 	return &host{
-		cnf: cnf,
+		cnf:        cnf,
 		sshFactory: sshFactory,
 	}
 }
@@ -32,17 +32,40 @@ func (hi *host) GetLastStatisticsFromHost() (entity.Statistics, error) {
 		return entity.Statistics{}, err
 	}
 
-	result, err := sshClient.Execute("cat /proc/meminfo | grep 'Available' | awk -F ' ' '{print $2}'")
+	ram, err := hi.getRam(sshClient)
 	if err != nil {
-		return entity.Statistics{}, err
+		return entity.Statistics{}, nil
 	}
 
-	result = strings.Trim(result, "\n")
+	return entity.Statistics{
+		Ram: ram,
+	}, nil
+}
 
-	ram, err := strconv.Atoi(result)
+func (hi *host) getRam(cl usecase_repository.SSHClient) (entity.Ram, error) {
+	// Ram
+	availableRaw, err := cl.Execute("cat /proc/meminfo | grep 'Available' | awk -F ' ' '{print $2}'")
 	if err != nil {
-		return entity.Statistics{}, err
+		return entity.Ram{}, err
 	}
 
-	return entity.Statistics{FreeRam: ram}, nil
+	available, err := strconv.Atoi(strings.Trim(availableRaw, "\n"))
+	if err != nil {
+		return entity.Ram{}, nil
+	}
+
+	totalRaw, err := cl.Execute("cat /proc/meminfo | grep 'MemTotal' | awk -F ' ' '{print $2}'")
+	if err != nil {
+		return entity.Ram{}, err
+	}
+
+	total, err := strconv.Atoi(strings.Trim(strings.Trim(totalRaw, "\n"), "\n"))
+	if err != nil {
+		return entity.Ram{}, nil
+	}
+
+	return entity.Ram{
+		Total:     total,
+		Available: available,
+	}, nil
 }
