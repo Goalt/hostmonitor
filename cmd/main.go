@@ -24,6 +24,18 @@ func main() {
 				Value:   1,
 				EnvVars: []string{variables.DebugLevel},
 			},
+			&cli.StringFlag{
+				Name:    variables.User,
+				EnvVars: []string{variables.User},
+			},
+			&cli.StringFlag{
+				Name:    variables.Password,
+				EnvVars: []string{variables.Password},
+			},
+			&cli.StringFlag{
+				Name:    variables.Address,
+				EnvVars: []string{variables.Address},
+			},
 		},
 		Action: func(ctx *cli.Context) error {
 			cfg := config.Config{
@@ -38,14 +50,19 @@ func main() {
 					Port: 8080,
 				},
 				Updater: config.Updater{
-					Interval: 3 * time.Second,
+					Interval: 5 * time.Second,
+				},
+				Host: config.Host{
+					User:     ctx.String(variables.User),
+					Password: ctx.String(variables.Password),
+					Address:  ctx.String(variables.Address),
 				},
 			}
 			fmt.Printf("%+v\n", cfg)
 
 			signalCtx, cancel := signalcontext.OnInterrupt()
 			defer cancel()
-			
+
 			app, cleanup, err := provider.InitializeApp(cfg, signalCtx)
 			if cleanup != nil {
 				defer cleanup()
