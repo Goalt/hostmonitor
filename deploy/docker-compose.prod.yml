@@ -2,7 +2,6 @@ version: "3.7"
 
 services:
   app:
-    depends_on: [ db ]
     image: ghcr.io/goalt/hostmonitor:$IMAGE_VERSION
     container_name: hostmonitor
     ports: [ "20003:8080" ]
