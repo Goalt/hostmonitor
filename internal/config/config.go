@@ -1,9 +1,12 @@
 package config
 
+import "time"
+
 type Config struct {
-	Logger     Logger
-	GRPCServer GRPCServer
+	Logger      Logger
+	GRPCServer  GRPCServer
 	ProxyServer ProxyServer
+	Updater     Updater
 }
 
 type GRPCServer struct {
@@ -17,4 +20,8 @@ type ProxyServer struct {
 type Logger struct {
 	SetReportCaller bool
 	Level           int
+}
+
+type Updater struct {
+	Interval time.Duration
 }

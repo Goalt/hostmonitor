@@ -9,6 +9,7 @@ import (
 	"github.com/Goalt/hostmonitor/internal/config"
 	"github.com/Goalt/hostmonitor/internal/infrastructure/grpc/server"
 	"github.com/Goalt/hostmonitor/internal/infrastructure/grpc/proxy"
+	"github.com/Goalt/hostmonitor/internal/infrastructure/updater"
 	usecase_repository "github.com/Goalt/hostmonitor/internal/usecase/repository"
 	"github.com/google/wire"
 )
@@ -19,6 +20,7 @@ type Application struct {
 
 	server *server.GRPCServer
 	proxy  *proxy.Proxy
+	updater *updater.Updater
 
 	config config.Config
 }
@@ -40,6 +42,11 @@ func (a *Application) Run() error {
 		}
 	}()
 
+	// Updater start
+	go func() {
+		a.updater.Run()
+	}()
+
 	<-a.ctx.Done()
 
 	//Server stop
@@ -52,13 +59,25 @@ func (a *Application) Run() error {
 	}
 	a.log.Info("stopped proxy server")
 
+	// Updater stopped
+	a.updater.Stop()
+	a.log.Info("stopped updater")
+
 	return nil
 }
 
-func provideApp(server *server.GRPCServer, proxy *proxy.Proxy, cfg config.Config, ctx context.Context, log usecase_repository.Logger) Application {
+func provideApp(
+	server *server.GRPCServer,
+	proxy *proxy.Proxy,
+	updater *updater.Updater,
+	cfg config.Config,
+	ctx context.Context,
+	log usecase_repository.Logger,
+) Application {
 	return Application{
 		server: server,
 		proxy: proxy,
+		updater: updater,
 		ctx:    ctx,
 		config: cfg,
 		log:    log,

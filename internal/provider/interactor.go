@@ -9,6 +9,11 @@ func provideStatisticsI() interactor.StatisticsI {
 	return interactor.NewStatistics()
 }
 
+func provideHostI() interactor.HostI {
+	return interactor.NewHost()
+}
+
 var InteractorSet = wire.NewSet(
 	provideStatisticsI,
+	provideHostI,
 )

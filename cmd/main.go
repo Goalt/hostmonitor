@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"os"
+	"time"
 
 	"github.com/Goalt/hostmonitor/cmd/subcomands"
 	"github.com/Goalt/hostmonitor/cmd/variables"
@@ -35,6 +36,9 @@ func main() {
 				},
 				ProxyServer: config.ProxyServer{
 					Port: 8080,
+				},
+				Updater: config.Updater{
+					Interval: 3 * time.Second,
 				},
 			}
 			fmt.Printf("%+v\n", cfg)
