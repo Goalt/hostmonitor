@@ -6,7 +6,7 @@ services:
     container_name: app
     build: .
     restart: always
-    env_file: .env
+    env_file: .env_test
     environment:
       - SSH_ADDRESS=${SSH_ADDRESS}
       - SSH_USER=${SSH_USER}
