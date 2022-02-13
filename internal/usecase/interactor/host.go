@@ -7,7 +7,7 @@ import (
 
 	"github.com/Goalt/hostmonitor/internal/config"
 	"github.com/Goalt/hostmonitor/internal/entity"
-	usecase_repository "github.com/Goalt/hostmonitor/internal/usecase/repository"
+	"github.com/Goalt/hostmonitor/internal/usecase/repository"
 )
 
 type HostI interface {
@@ -38,14 +38,31 @@ func (hi *host) GetLastStatisticsFromHost() (entity.Statistics, error) {
 		return entity.Statistics{}, err
 	}
 
+	storage, err := hi.getStorage(sshClient)
+	if err != nil {
+		return entity.Statistics{}, err
+	}
+
+	loadAvg, err := hi.getLoadAvg(sshClient)
+	if err != nil {
+		return entity.Statistics{}, err
+	}
+
+	uptime, err := hi.getUptime(sshClient)
+	if err != nil {
+		return entity.Statistics{}, err
+	}
+
 	return entity.Statistics{
-		Ram: ram,
+		Ram:       ram,
+		Storage:   storage,
+		LoadAvg:   loadAvg,
+		Uptime:    uptime,
 		UpdatedAt: time.Now(),
 	}, nil
 }
 
 func (hi *host) getRam(cl usecase_repository.SSHClient) (entity.Ram, error) {
-	// Ram
 	availableRaw, err := cl.Execute("cat /proc/meminfo | grep 'Available' | awk -F ' ' '{print $2}'")
 	if err != nil {
 		return entity.Ram{}, err
@@ -69,5 +86,84 @@ func (hi *host) getRam(cl usecase_repository.SSHClient) (entity.Ram, error) {
 	return entity.Ram{
 		Total:     total,
 		Available: available,
+	}, nil
+}
+
+func (hi *host) getStorage(cl usecase_repository.SSHClient) (entity.Storage, error) {
+	storageRaw, err := cl.Execute("df | grep '/dev/sda1 ' | awk -F ' ' '{print $2 \" \" $3 \" \" $4}'")
+	if err != nil {
+		return entity.Storage{}, err
+	}
+	storageRaw = strings.Trim(storageRaw, "\n")
+
+	sliced := strings.Split(storageRaw, " ")
+
+	total, err := strconv.Atoi(sliced[0])
+	if err != nil {
+		return entity.Storage{}, err
+	}
+
+	available, err := strconv.Atoi(sliced[1])
+	if err != nil {
+		return entity.Storage{}, err
+	}
+
+	free, err := strconv.Atoi(sliced[2])
+	if err != nil {
+		return entity.Storage{}, err
+	}
+
+	return entity.Storage{
+		Total:     total,
+		Available: available,
+		Free:      free,
+	}, nil
+}
+
+func (hi *host) getLoadAvg(cl usecase_repository.SSHClient) (entity.LoadAvg, error) {
+	loadRaw, err := cl.Execute("uptime | awk -F ' ' '{print $(NF-2) \" \" $(NF-1) \" \" $NF}'")
+	if err != nil {
+		return entity.LoadAvg{}, err
+	}
+	loadRaw = strings.Trim(loadRaw, "\n")
+
+	sliced := strings.Split(loadRaw, ", ")
+
+	load1, err := strconv.ParseFloat(sliced[0], 64)
+	if err != nil {
+		return entity.LoadAvg{}, err
+	}
+
+	load5, err := strconv.ParseFloat(sliced[1], 64)
+	if err != nil {
+		return entity.LoadAvg{}, err
+	}
+
+	load15, err := strconv.ParseFloat(sliced[2], 64)
+	if err != nil {
+		return entity.LoadAvg{}, err
+	}
+
+	return entity.LoadAvg{
+		Load1:  load1,
+		Load5:  load5,
+		Load15: load15,
+	}, nil
+}
+
+func (hi *host) getUptime(cl usecase_repository.SSHClient) (entity.Uptime, error) {
+	uptimeRaw, err := cl.Execute("awk '{print $1}' /proc/uptime")
+	if err != nil {
+		return entity.Uptime{}, err
+	}
+	uptimeRaw = strings.Trim(uptimeRaw, "\n")
+
+	uptime, err := strconv.ParseFloat(uptimeRaw, 64)
+	if err != nil {
+		return entity.Uptime{}, err
+	}
+
+	return entity.Uptime{
+		Dur: int(uptime),
 	}, nil
 }
