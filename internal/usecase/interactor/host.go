@@ -3,6 +3,7 @@ package interactor
 import (
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/Goalt/hostmonitor/internal/config"
 	"github.com/Goalt/hostmonitor/internal/entity"
@@ -34,11 +35,12 @@ func (hi *host) GetLastStatisticsFromHost() (entity.Statistics, error) {
 
 	ram, err := hi.getRam(sshClient)
 	if err != nil {
-		return entity.Statistics{}, nil
+		return entity.Statistics{}, err
 	}
 
 	return entity.Statistics{
 		Ram: ram,
+		UpdatedAt: time.Now(),
 	}, nil
 }
 

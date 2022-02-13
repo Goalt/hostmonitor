@@ -9,46 +9,45 @@ import (
 )
 
 type SSHFactory struct {
-
 }
 
 func NewSSHFactory() *SSHFactory {
-    return &SSHFactory{}
+	return &SSHFactory{}
 }
 
 func (s *SSHFactory) NewSSHClient(user string, addr string, password string) (usecase_repository.SSHClient, error) {
 	config := &ssh.ClientConfig{
-        User: user,
-        HostKeyCallback: ssh.InsecureIgnoreHostKey(),
-        Auth: []ssh.AuthMethod{
-            ssh.Password(password),
-        },
-    }
+		User:            user,
+		HostKeyCallback: ssh.InsecureIgnoreHostKey(),
+		Auth: []ssh.AuthMethod{
+			ssh.Password(password),
+		},
+	}
 
-    // Connect
-    client, err := ssh.Dial("tcp", net.JoinHostPort(addr, "22"), config)
-    if err != nil {
-        return nil, err
-    }
+	// Connect
+	client, err := ssh.Dial("tcp", net.JoinHostPort(addr, "22"), config)
+	if err != nil {
+		return nil, err
+	}
 
-    // Create a session. It is one session per command.
-    session, err := client.NewSession()
-    if err != nil {
-        return nil, err
-    }
-
-	return &SSHClient{session}, nil
+	return &SSHClient{client}, nil
 }
 
 type SSHClient struct {
-	*ssh.Session
+	*ssh.Client
 }
 
 func (c *SSHClient) Execute(cmd string) (string, error) {
-	var b bytes.Buffer 
-	c.Stdout = &b
+	// Create a session. It is one session per command.
+	session, err := c.Client.NewSession()
+	if err != nil {
+		return "", err
+	}
 
-	err := c.Run(cmd)
+	var b bytes.Buffer
+	session.Stdout = &b
+
+	err = session.Run(cmd)
 	if err != nil {
 		return "", err
 	}
@@ -57,5 +56,5 @@ func (c *SSHClient) Execute(cmd string) (string, error) {
 }
 
 func (c *SSHClient) Close() error {
-	return c.Session.Close()
+	return c.Client.Close()
 }
