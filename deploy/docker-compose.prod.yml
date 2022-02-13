@@ -6,7 +6,6 @@ services:
     container_name: hostmonitor
     ports: [ "20003:8080" ]
     restart: always
-    volumes: [ fs_data:/data ]
     environment:
       - SSH_ADDRESS=${SSH_ADDRESS}
       - SSH_USER=${SSH_USER}
