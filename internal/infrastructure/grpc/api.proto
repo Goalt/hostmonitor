@@ -12,8 +12,9 @@ message StatisticsResponse {
     Storage storage = 2;
     LoadAvg loadavg = 3;
     Uptime uptime = 4;
+    map <string, string> DockerContainers = 5;
 
-    uint64 updatedAt = 5;
+    uint64 updatedAt = 6;
 }
 
 message Ram {

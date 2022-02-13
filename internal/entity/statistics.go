@@ -7,6 +7,7 @@ type Statistics struct {
 	Storage Storage
 	LoadAvg LoadAvg
 	Uptime  Uptime
+	DockerContainers DockerContainers
 
 	UpdatedAt time.Time
 }
@@ -30,4 +31,8 @@ type LoadAvg struct {
 
 type Uptime struct {
 	Dur int
+}
+
+type DockerContainers struct {
+	Statuses map[string]string
 }

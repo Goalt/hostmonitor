@@ -85,6 +85,12 @@
         "uptime": {
           "$ref": "#/definitions/api_pbUptime"
         },
+        "DockerContainers": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
         "updatedAt": {
           "type": "string",
           "format": "uint64"

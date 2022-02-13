@@ -53,12 +53,18 @@ func (hi *host) GetLastStatisticsFromHost() (entity.Statistics, error) {
 		return entity.Statistics{}, err
 	}
 
+	containers, err := hi.getDockerContainers(sshClient)
+	if err != nil {
+		return entity.Statistics{}, err
+	}
+
 	return entity.Statistics{
 		Ram:       ram,
 		Storage:   storage,
 		LoadAvg:   loadAvg,
 		Uptime:    uptime,
 		UpdatedAt: time.Now(),
+		DockerContainers: containers,
 	}, nil
 }
 
@@ -165,5 +171,42 @@ func (hi *host) getUptime(cl usecase_repository.SSHClient) (entity.Uptime, error
 
 	return entity.Uptime{
 		Dur: int(uptime),
+	}, nil
+}
+
+func (hi *host) getDockerContainers(cl usecase_repository.SSHClient) (entity.DockerContainers, error) {
+	resultRaw, err := cl.Execute("docker ps --format '{{.Names}} {{.ID}} {{.Status}}'")
+	if err != nil {
+		return entity.DockerContainers{}, err
+	}
+	resultRaw = strings.Trim(resultRaw, "\n")
+
+	result := make(map[string]string)
+
+	for _, row := range strings.Split(resultRaw, "\n") {
+		splited := strings.SplitAfterN(row, " ", 3)
+
+		var (
+			name   string
+			status string
+		)
+
+		switch len(splited) {
+		case 2:
+			name = splited[0]
+			status = splited[1]
+		case 1:
+			name = splited[0]
+			status = "Error"
+		default:
+			name = splited[0]
+			status = splited[2]
+		}
+
+		result[strings.Trim(name, " ")] = strings.Trim(status, " ")
+	}
+
+	return entity.DockerContainers{
+		Statuses: result,
 	}, nil
 }
