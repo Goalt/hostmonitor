@@ -10,3 +10,10 @@ services:
       - SSH_ADDRESS=${SSH_ADDRESS}
       - SSH_USER=${SSH_USER}
       - SSH_PASSWORD=${SSH_PASSWORD}
+  www:
+    image: nginx:latest
+    restart: always
+    ports:
+      - "20004:80"
+    volumes:
+      - ./html:/usr/share/nginx/html

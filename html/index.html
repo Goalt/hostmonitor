@@ -1,0 +1,57 @@
+<html>
+    <head>
+    </head>
+    <body>
+        <h1>RAM</h1>
+        <p id="ram_total"></p>
+        <p id="ram_available"></p>
+        
+        <h1>Storage</h1>
+        <p id="storage_total"></p>
+        <p id="storage_available"></p>
+        <p id="storage_free"></p>
+
+        <h1>LoadAvg</h1>
+        <p id="loadavg_1"></p>
+        <p id="loadavg_5"></p>
+        <p id="loadavg_15"></p>
+
+        <h1>Uptime</h1>
+        <p id="uptime"></p>
+
+        <h1>Updated at</h1>
+        <p id="updated"></p>
+
+        <script>
+            const url = "http://localhost:20003/statistics";
+            const options = {
+                headers: {
+                    accept: "application/json"
+                }
+            };
+
+            function update(data) {
+                console.log(data)
+
+                document.getElementById("ram_total").innerHTML = "Total: " + data.ram.Total;
+                document.getElementById("ram_available").innerHTML = "Available: " + data.ram.Available;
+                
+                document.getElementById("storage_total").innerHTML = "Total: " + data.storage.Total;
+                document.getElementById("storage_available").innerHTML = "Available: " + data.storage.Total;
+                document.getElementById("storage_free").innerHTML = "Free: " + data.storage.Total;
+
+                document.getElementById("loadavg_1").innerHTML = "1: " + data.loadavg.Load1;
+                document.getElementById("loadavg_5").innerHTML = "5: " + data.loadavg.Load5;
+                document.getElementById("loadavg_15").innerHTML = "15: " + data.loadavg.Load15;
+
+                document.getElementById("uptime").innerHTML = "Total: " + data.uptime.dur;
+
+                document.getElementById("updated").innerHTML = data.updatedAt;
+            }
+
+            fetch(url, options)
+                .then( res => res.json() )
+                .then(update)
+        </script>
+    </body>
+</html>
