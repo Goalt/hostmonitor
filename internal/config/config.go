@@ -7,6 +7,7 @@ type Config struct {
 	GRPCServer  GRPCServer
 	ProxyServer ProxyServer
 	Updater     Updater
+	Host        Host
 }
 
 type GRPCServer struct {
@@ -24,4 +25,10 @@ type Logger struct {
 
 type Updater struct {
 	Interval time.Duration
+}
+
+type Host struct {
+	User     string
+	Password string
+	Address  string
 }

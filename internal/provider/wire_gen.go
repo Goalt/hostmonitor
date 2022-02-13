@@ -27,7 +27,9 @@ func InitializeApp(cfg config.Config, context2 context.Context) (Application, fu
 	updater := provideCnfUpdater(cfg)
 	logger := provideCnfLogger(cfg)
 	usecase_repositoryLogger := ProvideLogger(logger)
-	hostI := provideHostI()
+	host := provideCnfHost(cfg)
+	sshClientFactory := provideSSHFactory()
+	hostI := provideHostI(host, sshClientFactory)
 	updaterUpdater := provideUpdater(updater, usecase_repositoryLogger, hostI, statisticsI)
 	application := provideApp(serverGRPCServer, proxy, updaterUpdater, cfg, context2, usecase_repositoryLogger)
 	return application, func() {

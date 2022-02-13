@@ -6,6 +6,7 @@ import (
 	"github.com/Goalt/hostmonitor/internal/infrastructure/grpc/server"
 	"github.com/Goalt/hostmonitor/internal/infrastructure/logger"
 	"github.com/Goalt/hostmonitor/internal/infrastructure/updater"
+	"github.com/Goalt/hostmonitor/internal/infrastructure/repository"
 	"github.com/Goalt/hostmonitor/internal/usecase/interactor"
 	usecase_repository "github.com/Goalt/hostmonitor/internal/usecase/repository"
 	"github.com/google/wire"
@@ -31,10 +32,15 @@ func provideUpdater(cnf config.Updater, log usecase_repository.Logger, hostI int
 	return updater.NewUpdater(cnf, log, hostI, statI)
 }
 
+func provideSSHFactory() usecase_repository.SSHClientFactory {
+	return repository.NewSSHFactory()
+}
+
 var InfrastructureSet = wire.NewSet(
 	ProvideLogger,
 	provideServer,
 	provideProxy,
 	provideHandler,
 	provideUpdater,
+	provideSSHFactory,
 )

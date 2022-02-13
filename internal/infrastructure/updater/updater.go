@@ -34,8 +34,12 @@ L:
 		case <-u.stopCh:
 			break L
 		case <-tick.C:
-			newStat := u.hostI.GetLastStatisticsFromHost()
-			u.statI.Update(newStat)
+			newStat, err := u.hostI.GetLastStatisticsFromHost()
+			if err != nil {
+				u.log.Error(err)
+			} else {
+				u.statI.Update(newStat)
+			}
 		}
 	}
 }

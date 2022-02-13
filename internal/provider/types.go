@@ -21,9 +21,14 @@ func provideCnfUpdater(cnf config.Config) config.Updater {
 	return cnf.Updater
 }
 
+func provideCnfHost(cnf config.Config) config.Host {
+	return cnf.Host
+}
+
 var TypesSet = wire.NewSet(
 	provideCnfLogger,
 	provideCnfGRPCServer,
 	provideCnfProxyServer,
 	provideCnfUpdater,
+	provideCnfHost,
 )
