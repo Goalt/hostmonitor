@@ -7,10 +7,6 @@ services:
     build: .
     restart: always
     env_file: .env_test
-    environment:
-      - SSH_ADDRESS=${SSH_ADDRESS}
-      - SSH_USER=${SSH_USER}
-      - SSH_PASSWORD=${SSH_PASSWORD}
     ports:
       - 8080:8080
   swagger-ui:
