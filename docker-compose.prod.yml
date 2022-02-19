@@ -5,6 +5,7 @@ services:
     image: ghcr.io/goalt/hostmonitor:$IMAGE_VERSION
     container_name: hostmonitor
     restart: always
+    ports: ["20005:8080"]
     environment:
       - SSH_ADDRESS=${DEPLOY_SSH_ADDRESS}
       - SSH_USER=${DEPLOY_SSH_USER}
