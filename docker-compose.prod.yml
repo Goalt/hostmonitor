@@ -4,9 +4,13 @@ services:
   app:
     image: ghcr.io/goalt/hostmonitor:$IMAGE_VERSION
     container_name: hostmonitor
-    ports: [ "20003:8080" ]
     restart: always
     environment:
       - SSH_ADDRESS=${DEPLOY_SSH_ADDRESS}
       - SSH_USER=${DEPLOY_SSH_USER}
       - SSH_PASSWORD=${DEPLOY_SSH_PASSWORD}
+  js:
+    image: ghcr.io/goalt/hostmonitor-js:1.0.4
+    container_name: hostmonitor-js
+    restart: always
+    ports: ["20004:80"]

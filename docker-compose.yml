@@ -18,10 +18,3 @@ services:
       - SWAGGER_JSON=/foo/api.swagger.json
     ports:
       - 8090:8080
-  www:
-    image: nginx:latest
-    restart: always
-    ports:
-      - "8081:80"
-    volumes:
-      - ./html:/usr/share/nginx/html
