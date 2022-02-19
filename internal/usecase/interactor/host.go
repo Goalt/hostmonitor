@@ -7,7 +7,7 @@ import (
 
 	"github.com/Goalt/hostmonitor/internal/config"
 	"github.com/Goalt/hostmonitor/internal/entity"
-	"github.com/Goalt/hostmonitor/internal/usecase/repository"
+	usecase_repository "github.com/Goalt/hostmonitor/internal/usecase/repository"
 )
 
 type HostI interface {
@@ -32,6 +32,7 @@ func (hi *host) GetLastStatisticsFromHost() (entity.Statistics, error) {
 	if err != nil {
 		return entity.Statistics{}, err
 	}
+	defer sshClient.Close()
 
 	ram, err := hi.getRam(sshClient)
 	if err != nil {
@@ -59,11 +60,11 @@ func (hi *host) GetLastStatisticsFromHost() (entity.Statistics, error) {
 	}
 
 	return entity.Statistics{
-		Ram:       ram,
-		Storage:   storage,
-		LoadAvg:   loadAvg,
-		Uptime:    uptime,
-		UpdatedAt: time.Now(),
+		Ram:              ram,
+		Storage:          storage,
+		LoadAvg:          loadAvg,
+		Uptime:           uptime,
+		UpdatedAt:        time.Now(),
 		DockerContainers: containers,
 	}, nil
 }
