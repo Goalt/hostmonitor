@@ -28,7 +28,7 @@ func TestAdd(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			Add(tt.args.command)
 
-			assert.Len(t, subcommandSingleton, 1)
+			assert.Len(t, subcommandSingleton, 2)
 			assert.Equal(t, subcommandSingleton, []*cli.Command{{Name: "test"}})
 		})
 	}
