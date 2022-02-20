@@ -72,7 +72,7 @@ func main() {
 				return nil
 			}
 
-			err = app.Run()
+			app.Run()
 			if err != nil {
 				fmt.Println(err)
 			}
