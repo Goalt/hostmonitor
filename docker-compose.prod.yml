@@ -22,6 +22,5 @@ services:
     pid: host
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - ./glances.conf:/glances/conf/glances.conf
     environment:
       - "GLANCES_OPT=-w"
