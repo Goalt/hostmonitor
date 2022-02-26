@@ -20,6 +20,7 @@ services:
     image: nicolargo/glances:3.2.4.2-full
     restart: always
     pid: host
+    ports: ["62208:62208"]
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     environment:
