@@ -15,3 +15,13 @@ services:
     container_name: hostmonitor-js
     restart: always
     ports: ["20004:80"]
+  
+  glance:
+    image: nicolargo/glances:latest-alpine
+    restart: always
+    pid: host
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./glances.conf:/glances/conf/glances.conf
+    environment:
+      - "GLANCES_OPT=-w"
